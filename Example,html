@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SportsConnect</title>
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Bebas+Neue&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --turf: #2D6A4F;
+  --turf-light: #52B788;
+  --turf-pale: #D8F3DC;
+  --court: #F4700C;
+  --court-pale: #FEE8D6;
+  --court-dark: #C85A06;
+  --track: #1B4FD8;
+  --track-pale: #DBEAFE;
+  --gold: #D4A017;
+  --gold-pale: #FEF3C7;
+  --chalk: #FAFAF8;
+  --white: #FFFFFF;
+  --ink: #0F1A0E;
+  --ink-80: #1E2E1D;
+  --ink-50: #5A6B59;
+  --ink-30: #94A593;
+  --ink-10: #E8EDE7;
+  --ink-5: #F2F5F1;
+  --radius-sm: 6px;
+  --radius: 12px;
+  --radius-lg: 20px;
+  --shadow-sm: 0 1px 3px rgba(15,26,14,0.08), 0 1px 2px rgba(15,26,14,0.05);
+  --shadow: 0 4px 16px rgba(15,26,14,0.10), 0 2px 6px rgba(15,26,14,0.06);
+  --shadow-lg: 0 12px 40px rgba(15,26,14,0.14), 0 4px 12px rgba(15,26,14,0.08);
+  --shadow-green: 0 4px 20px rgba(45,106,79,0.25);
+  --shadow-orange: 0 4px 20px rgba(244,112,12,0.22);
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--chalk);
+  color: var(--ink);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root { min-height: 100vh; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--ink-5); }
+::-webkit-scrollbar-thumb { background: var(--ink-10); border-radius: 3px; }
+
+/* ── NAV ── */
+.nav {
+  background: var(--white);
+  border-bottom: 1.5px solid var(--ink-10);
+  position: sticky; top: 0; z-index: 200;
+  box-shadow: var(--shadow-sm);
+}
+.nav-inner {
+  max-width: 1120px; margin: 0 auto;
+  padding: 0 28px;
+  display: flex; align-items: center; gap: 4px;
+  height: 62px;
+}
+.nav-logo {
+  display: flex; align-items: center; gap: 0; margin-right: 28px;
+  text-decoration: none;
+}
+.nav-logo-sport {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px; letter-spacing: 2px;
+  color: var(--turf);
+  line-height: 1;
+}
+.nav-logo-connect {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px; letter-spacing: 2px;
+  color: var(--court);
+  line-height: 1;
+}
+.nav-tab {
+  display: flex; align-items: center; gap: 7px;
+  padding: 7px 14px; border-radius: 8px;
+  border: none; background: transparent;
+  font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500;
+  color: var(--ink-50); cursor: pointer;
+  transition: all 0.18s;
+  white-space: nowrap;
+}
+.nav-tab:hover { background: var(--ink-5); color: var(--ink); }
+.nav-tab.active {
+  background: var(--turf-pale); color: var(--turf);
+  font-weight: 600;
+}
+.nav-avatar {
+  margin-left: auto;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--turf), var(--turf-light));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: white;
+  font-family: 'Oswald', sans-serif; letter-spacing: 0.5px;
+  box-shadow: var(--shadow-green);
+}
+.nav-user-name {
+  font-size: 13px; font-weight: 500; color: var(--ink-50);
+}
+
+/* ── PAGE LAYOUT ── */
+.page { max-width: 1120px; margin: 0 auto; padding: 40px 28px; }
+.page-sm { max-width: 720px; margin: 0 auto; padding: 40px 28px; }
+
+/* ── HERO SECTION ── */
+.hero {
+  background: linear-gradient(135deg, var(--turf) 0%, var(--turf-light) 100%);
+  border-radius: var(--radius-lg);
+  padding: 48px 48px 40px;
+  margin-bottom: 32px;
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; top: -40px; right: -40px;
+  width: 260px; height: 260px; border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  pointer-events: none;
+}
+.hero::after {
+  content: '';
+  position: absolute; bottom: -60px; right: 120px;
+  width: 180px; height: 180px; border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+  pointer-events: none;
+}
+.hero-eyebrow {
+  font-family: 'Oswald', sans-serif; font-weight: 500;
+  font-size: 12px; letter-spacing: 3px; text-transform: uppercase;
+  color: rgba(255,255,255,0.65); margin-bottom: 10px;
+}
+.hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(48px, 7vw, 80px); letter-spacing: 2px;
+  color: white; line-height: 0.95;
+  margin-bottom: 16px;
+}
+.hero-title span { color: var(--gold); }
+.hero-sub {
+  font-size: 15px; font-weight: 400; color: rgba(255,255,255,0.78);
+  max-width: 420px; line-height: 1.55;
+}
+
+/* ── CARDS ── */
+.card {
+  background: var(--white);
+  border: 1.5px solid var(--ink-10);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+.card-inner { padding: 24px; }
+.card-header {
+  padding: 20px 24px 0;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.card-title {
+  font-family: 'Oswald', sans-serif; font-weight: 600;
+  font-size: 15px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--ink-50);
+}
+.card-body { padding: 16px 24px 24px; }
+
+/* ── SECTION HEADER ── */
+.section-header { margin-bottom: 28px; }
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 42px; letter-spacing: 1.5px; line-height: 1;
+  color: var(--ink);
+}
+.section-title .accent { color: var(--court); }
+.section-sub {
+  font-size: 14px; color: var(--ink-50); margin-top: 5px;
+}
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 7px; padding: 10px 20px;
+  border-radius: var(--radius-sm); border: none;
+  font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: all 0.18s; white-space: nowrap;
+}
+.btn-primary {
+  background: var(--turf); color: white;
+  box-shadow: var(--shadow-green);
+}
+.btn-primary:hover { background: var(--turf-light); transform: translateY(-1px); box-shadow: 0 6px 24px rgba(45,106,79,0.3); }
+.btn-primary:disabled { background: var(--ink-10); color: var(--ink-30); box-shadow: none; transform: none; cursor: not-allowed; }
+.btn-outline {
+  background: transparent; color: var(--ink-50);
+  border: 1.5px solid var(--ink-10);
+}
+.btn-outline:hover { border-color: var(--ink-30); color: var(--ink); background: var(--ink-5); }
+.btn-orange {
+  background: var(--court); color: white;
+  box-shadow: var(--shadow-orange);
+}
+.btn-orange:hover { background: var(--court-dark); transform: translateY(-1px); }
+.btn-lg { padding: 13px 28px; font-size: 15px; border-radius: var(--radius-sm); }
+.btn-full { width: 100%; }
+
+/* ── FORM ELEMENTS ── */
+.form-group { display: flex; flex-direction: column; gap: 8px; }
+.form-label {
+  font-family: 'Oswald', sans-serif; font-size: 12px; font-weight: 500;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--ink-50);
+}
+.form-input {
+  background: var(--white); border: 1.5px solid var(--ink-10);
+  border-radius: var(--radius-sm); padding: 10px 14px;
+  font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--ink);
+  outline: none; transition: border-color 0.15s;
+  width: 100%;
+}
+.form-input:focus { border-color: var(--turf); box-shadow: 0 0 0 3px rgba(45,106,79,0.1); }
+.form-input::placeholder { color: var(--ink-30); }
+textarea.form-input { resize: none; }
+select.form-input { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%235A6B59' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; }
+
+/* ── SPORT CHIPS ── */
+.chip-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.chip {
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  padding: 10px 8px; border-radius: var(--radius-sm);
+  border: 1.5px solid var(--ink-10); background: var(--white);
+  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+  color: var(--ink-50); cursor: pointer; transition: all 0.15s;
+}
+.chip:hover { border-color: var(--ink-30); color: var(--ink); background: var(--ink-5); }
+.chip.active-green { border-color: var(--turf); background: var(--turf-pale); color: var(--turf); font-weight: 600; }
+.chip.active-orange { border-color: var(--court); background: var(--court-pale); color: var(--court-dark); font-weight: 600; }
+.chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.pill {
+  padding: 6px 14px; border-radius: 20px;
+  border: 1.5px solid var(--ink-10); background: var(--white);
+  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+  color: var(--ink-50); cursor: pointer; transition: all 0.15s;
+}
+.pill:hover { border-color: var(--ink-30); color: var(--ink); }
+.pill.active-orange { border-color: var(--court); background: var(--court-pale); color: var(--court-dark); font-weight: 600; }
+.pill.active-green { border-color: var(--turf); background: var(--turf-pale); color: var(--turf); font-weight: 600; }
+.pill.active-track { border-color: var(--track); background: var(--track-pale); color: var(--track); font-weight: 600; }
+.pill.active-gold { border-color: var(--gold); background: var(--gold-pale); color: var(--gold); font-weight: 600; }
+
+/* ── BADGE ── */
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 700;
+  font-family: 'Oswald', sans-serif; letter-spacing: 0.8px; text-transform: uppercase;
+}
+.badge-green { background: var(--turf-pale); color: var(--turf); border: 1px solid rgba(45,106,79,0.2); }
+.badge-orange { background: var(--court-pale); color: var(--court-dark); border: 1px solid rgba(244,112,12,0.2); }
+.badge-gold { background: var(--gold-pale); color: var(--gold); border: 1px solid rgba(212,160,23,0.2); }
+.badge-track { background: var(--track-pale); color: var(--track); border: 1px solid rgba(27,79,216,0.2); }
+.badge-ink { background: var(--ink-5); color: var(--ink-50); border: 1px solid var(--ink-10); }
+
+/* ── STAT BOX ── */
+.stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.stat-box {
+  background: var(--white); border: 1.5px solid var(--ink-10);
+  border-radius: var(--radius); padding: 18px 12px;
+  text-align: center; box-shadow: var(--shadow-sm);
+}
+.stat-val {
+  font-family: 'Bebas Neue', sans-serif; font-size: 34px; letter-spacing: 1px;
+  line-height: 1;
+}
+.stat-label {
+  font-family: 'Oswald', sans-serif; font-size: 10px; font-weight: 500;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--ink-30); margin-top: 4px;
+}
+
+/* ── RATING BAR ── */
+.rating-bar-wrap {
+  background: var(--ink-5); border-radius: 4px;
+  height: 8px; overflow: hidden; flex: 1;
+}
+.rating-bar-fill {
+  height: 100%; border-radius: 4px;
+  transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* ── PLAYER CARD ── */
+.player-card {
+  background: var(--white); border: 1.5px solid var(--ink-10);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden; transition: all 0.2s;
+  position: relative;
+}
+.player-card:hover { box-shadow: var(--shadow); transform: translateY(-2px); border-color: var(--ink-30); }
+.player-card.best-match { border-color: var(--turf); }
+.player-card-accent {
+  height: 4px;
+  background: linear-gradient(90deg, var(--turf), var(--turf-light));
+}
+.player-card-body { padding: 20px; }
+
+/* ── MATCH ROW ── */
+.match-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 14px; border-radius: var(--radius-sm);
+  background: var(--ink-5); border: 1px solid var(--ink-10);
+  transition: background 0.15s;
+}
+.match-row:hover { background: var(--white); }
+.match-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+
+/* ── TIER ROW ── */
+.tier-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 13px 16px; border-radius: var(--radius-sm);
+  border: 1.5px solid var(--ink-10); background: var(--white);
+  transition: all 0.2s;
+}
+.tier-row.active-tier {
+  border-color: var(--turf); background: var(--turf-pale);
+}
+
+/* ── DIVIDER ── */
+.divider { height: 1px; background: var(--ink-10); margin: 20px 0; }
+
+/* ── GRID UTILITIES ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.flex { display: flex; }
+.flex-col { display: flex; flex-direction: column; }
+.gap-4 { gap: 4px; }
+.gap-6 { gap: 6px; }
+.gap-8 { gap: 8px; }
+.gap-12 { gap: 12px; }
+.gap-16 { gap: 16px; }
+.gap-20 { gap: 20px; }
+.gap-24 { gap: 24px; }
+.items-center { align-items: center; }
+.items-start { align-items: flex-start; }
+.justify-between { justify-content: space-between; }
+.wrap { flex-wrap: wrap; }
+.flex-1 { flex: 1; }
+.mt-4 { margin-top: 4px; }
+.mt-8 { margin-top: 8px; }
+.mt-12 { margin-top: 12px; }
+.mt-16 { margin-top: 16px; }
+.mt-20 { margin-top: 20px; }
+.mb-12 { margin-bottom: 12px; }
+.mb-16 { margin-bottom: 16px; }
+.mb-20 { margin-bottom: 20px; }
+.mb-24 { margin-bottom: 24px; }
+.text-sm { font-size: 13px; }
+.text-xs { font-size: 11px; }
+.text-muted { color: var(--ink-50); }
+.text-faint { color: var(--ink-30); }
+.font-oswald { font-family: 'Oswald', sans-serif; }
+.font-bebas { font-family: 'Bebas Neue', sans-serif; }
+.fw-600 { font-weight: 600; }
+
+/* ── SIMULATOR BUTTONS ── */
+.outcome-btn {
+  flex: 1; padding: 13px 8px; border-radius: var(--radius-sm);
+  border: 2px solid; cursor: pointer;
+  font-family: 'Oswald', sans-serif; font-size: 16px; font-weight: 600;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  transition: all 0.15s; text-align: center;
+}
+
+/* ── FILTER BAR ── */
+.filter-bar {
+  background: var(--white); border: 1.5px solid var(--ink-10);
+  border-radius: var(--radius); padding: 16px 20px;
+  display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+  box-shadow: var(--shadow-sm);
+}
+.filter-count {
+  margin-left: auto;
+  font-size: 13px; color: var(--ink-30);
+  font-family: 'Oswald', sans-serif; font-weight: 500; letter-spacing: 0.5px;
+}
+
+/* ── EMPTY STATE ── */
+.empty {
+  grid-column: 1 / -1; text-align: center;
+  padding: 72px 0;
+}
+.empty-icon { font-size: 44px; margin-bottom: 12px; }
+.empty-title {
+  font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 1px;
+  color: var(--ink-30); margin-bottom: 6px;
+}
+.empty-sub { font-size: 13px; color: var(--ink-30); }
+
+/* ── PROGRESS STEP ── */
+.form-steps {
+  display: flex; gap: 0; align-items: center;
+  margin-bottom: 32px;
+}
+.step {
+  display: flex; align-items: center; gap: 8px;
+  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+}
+.step-circle {
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700;
+  background: var(--ink-5); color: var(--ink-30); border: 1.5px solid var(--ink-10);
+}
+.step-circle.done { background: var(--turf); color: white; border-color: var(--turf); }
+.step-circle.active { background: var(--court); color: white; border-color: var(--court); }
+.step-line { flex: 1; height: 1.5px; background: var(--ink-10); min-width: 20px; }
+
+/* ── NOTIFICATION DOT ── */
+.notif-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--court); display: inline-block;
+}
+
+/* ── AVATAR ── */
+.avatar {
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Oswald', sans-serif; font-weight: 600; color: white;
+  flex-shrink: 0;
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 640px) {
+  .page, .page-sm { padding: 24px 16px; }
+  .stat-grid { grid-template-columns: repeat(2, 1fr); }
+  .chip-grid { grid-template-columns: repeat(2, 1fr); }
+  .hero { padding: 28px 24px; }
+  .hero-title { font-size: 48px; }
+  .grid-2 { grid-template-columns: 1fr; }
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-in { animation: fadeIn 0.3s ease forwards; }
+@keyframes pulse-green {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(45,106,79,0.3); }
+  50% { box-shadow: 0 0 0 8px rgba(45,106,79,0); }
+}
+.pulse-green { animation: pulse-green 2s infinite; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useRef } = React;
+
+/* ─── DATA ─────────────────────────────────────────────────────────── */
+const SPORTS = [
+  { id: 'football', label: 'Football', icon: '⚽' },
+  { id: 'basketball', label: 'Basketball', icon: '🏀' },
+  { id: 'cricket', label: 'Cricket', icon: '🏏' },
+  { id: 'tennis', label: 'Tennis', icon: '🎾' },
+  { id: 'badminton', label: 'Badminton', icon: '🏸' },
+  { id: 'volleyball', label: 'Volleyball', icon: '🏐' },
+];
+
+const SKILL_LEVELS = [
+  { id: 'beginner', label: 'Beginner', rating: 800, color: '#1B4FD8', paleBg: '#DBEAFE', label2: 'Just starting out' },
+  { id: 'amateur', label: 'Amateur', rating: 1000, color: '#2D6A4F', paleBg: '#D8F3DC', label2: 'Learning the ropes' },
+  { id: 'intermediate', label: 'Intermediate', rating: 1200, color: '#D4A017', paleBg: '#FEF3C7', label2: 'Solid fundamentals' },
+  { id: 'advanced', label: 'Advanced', rating: 1400, color: '#F4700C', paleBg: '#FEE8D6', label2: 'Competitive play' },
+  { id: 'professional', label: 'Pro', rating: 1600, color: '#7C3AED', paleBg: '#EDE9FE', label2: 'Elite level' },
+];
+
+const CITIES = ['Mumbai', 'Pune', 'Delhi', 'Bangalore', 'Chennai', 'Hyderabad', 'Kolkata', 'Ahmedabad'];
+
+const SAMPLE_PLAYERS = [
+  { id: 1, name: 'Arjun Sharma', sport: 'football', skill: 'advanced', rating: 1420, city: 'Pune', avatar: 'AS', wins: 23, losses: 5, played: 28, bio: 'FC Pune City youth academy. Left winger.', availability: ['weekends', 'evenings'] },
+  { id: 2, name: 'Priya Nair', sport: 'basketball', skill: 'intermediate', rating: 1195, city: 'Pune', avatar: 'PN', wins: 18, losses: 12, played: 30, bio: 'College point guard, loves 3-on-3.', availability: ['mornings', 'weekends'] },
+  { id: 3, name: 'Rohan Mehta', sport: 'cricket', skill: 'professional', rating: 1620, city: 'Mumbai', avatar: 'RM', wins: 45, losses: 8, played: 53, bio: 'Club-level fast bowler, BCCI licensed.', availability: ['weekends'] },
+  { id: 4, name: 'Kavya Reddy', sport: 'badminton', skill: 'advanced', rating: 1380, city: 'Hyderabad', avatar: 'KR', wins: 31, losses: 9, played: 40, bio: 'State-level doubles specialist.', availability: ['evenings', 'weekends'] },
+  { id: 5, name: 'Deepak Kumar', sport: 'football', skill: 'intermediate', rating: 1220, city: 'Pune', avatar: 'DK', wins: 14, losses: 10, played: 24, bio: 'Defensive midfielder. Weekend warrior.', availability: ['weekends'] },
+  { id: 6, name: 'Sneha Patel', sport: 'tennis', skill: 'amateur', rating: 1050, city: 'Ahmedabad', avatar: 'SP', wins: 9, losses: 16, played: 25, bio: 'Casual player, loves baseline rallies.', availability: ['mornings', 'evenings'] },
+  { id: 7, name: 'Vikram Singh', sport: 'volleyball', skill: 'intermediate', rating: 1240, city: 'Delhi', avatar: 'VS', wins: 17, losses: 8, played: 25, bio: 'Outside hitter. University team captain.', availability: ['evenings'] },
+  { id: 8, name: 'Ananya Joshi', sport: 'football', skill: 'beginner', rating: 830, city: 'Pune', avatar: 'AJ', wins: 3, losses: 9, played: 12, bio: 'Just started! Looking for friendly games.', availability: ['weekends', 'mornings'] },
+  { id: 9, name: 'Rahul Verma', sport: 'cricket', skill: 'intermediate', rating: 1185, city: 'Delhi', avatar: 'RV', wins: 20, losses: 15, played: 35, bio: 'Opening batsman, love T20 format.', availability: ['mornings', 'weekends'] },
+  { id: 10, name: 'Meera Krishnan', sport: 'tennis', skill: 'advanced', rating: 1410, city: 'Bangalore', avatar: 'MK', wins: 28, losses: 7, played: 35, bio: 'Net player, 10 yrs experience.', availability: ['evenings', 'weekends'] },
+];
+
+/* ─── HELPERS ─────────────────────────────────────────────────────── */
+function getTier(rating) {
+  if (rating >= 1600) return { label: 'Pro', color: '#7C3AED', pale: '#EDE9FE', badgeClass: 'badge-track' };
+  if (rating >= 1400) return { label: 'Advanced', color: '#F4700C', pale: '#FEE8D6', badgeClass: 'badge-orange' };
+  if (rating >= 1200) return { label: 'Intermediate', color: '#D4A017', pale: '#FEF3C7', badgeClass: 'badge-gold' };
+  if (rating >= 1000) return { label: 'Amateur', color: '#2D6A4F', pale: '#D8F3DC', badgeClass: 'badge-green' };
+  return { label: 'Beginner', color: '#1B4FD8', pale: '#DBEAFE', badgeClass: 'badge-track' };
+}
+function getRatingBar(rating) {
+  return Math.round(((Math.min(rating, 1800) - 600) / 1200) * 100);
+}
+function winRate(wins, played) {
+  return played ? Math.round((wins / played) * 100) : 0;
+}
+function eloChange(outcome) {
+  const scores = { win: 1, draw: 0.5, loss: 0 };
+  return Math.round(32 * (scores[outcome] - 0.5));
+}
+function Avatar({ initials, size = 44, rating, style: extraStyle }) {
+  const tier = getTier(rating || 0);
+  return (
+    <div className="avatar" style={{
+      width: size, height: size,
+      fontSize: size * 0.32,
+      background: `linear-gradient(135deg, ${tier.color}cc, ${tier.color})`,
+      border: `2px solid ${tier.color}`,
+      boxShadow: `0 2px 8px ${tier.color}44`,
+      ...extraStyle
+    }}>{initials}</div>
+  );
+}
+
+/* ─── NAV ─────────────────────────────────────────────────────────── */
+function NavBar({ page, setPage, currentUser }) {
+  const tabs = [
+    { id: 'profile', label: 'My Profile', icon: '👤' },
+    { id: 'rating', label: 'Level System', icon: '📊' },
+    { id: 'match', label: 'Find Players', icon: '🔍' },
+  ];
+  return (
+    <nav className="nav">
+      <div className="nav-inner">
+        <div className="nav-logo" style={{ cursor: 'pointer' }} onClick={() => setPage('profile')}>
+          <span className="nav-logo-sport">SPORTS</span>
+          <span className="nav-logo-connect">CONNECT</span>
+        </div>
+        {tabs.map(t => (
+          <button key={t.id} onClick={() => setPage(t.id)}
+            className={`nav-tab ${page === t.id ? 'active' : ''}`}>
+            <span>{t.icon}</span> {t.label}
+          </button>
+        ))}
+        {currentUser && (
+          <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div className="nav-avatar">{currentUser.avatar}</div>
+            <span className="nav-user-name">{currentUser.name.split(' ')[0]}</span>
+          </div>
+        )}
+      </div>
+    </nav>
+  );
+}
+
+/* ─── PROFILE PAGE ────────────────────────────────────────────────── */
+function ProfilePage({ currentUser, setCurrentUser }) {
+  const [editing, setEditing] = useState(!currentUser);
+  const [form, setForm] = useState(currentUser || {
+    name: '', sport: 'football', skill: 'beginner', city: 'Pune',
+    bio: '', availability: [], rating: 800, wins: 0, losses: 0, played: 0, avatar: ''
+  });
+
+  const toggleAvail = (a) => setForm(f => ({
+    ...f, availability: f.availability.includes(a) ? f.availability.filter(x => x !== a) : [...f.availability, a]
+  }));
+
+  const handleSave = () => {
+    const initials = form.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+    const base = SKILL_LEVELS.find(s => s.id === form.skill)?.rating || 800;
+    setCurrentUser({ ...form, avatar: initials, rating: currentUser ? currentUser.rating : base });
+    setEditing(false);
+  };
+
+  if (editing || !currentUser) {
+    const sl = SKILL_LEVELS.find(s => s.id === form.skill);
+    return (
+      <div className="page-sm fade-in">
+        {/* Section header */}
+        <div className="section-header">
+          <div className="section-title">{currentUser ? 'EDIT YOUR PROFILE' : <>BUILD YOUR<br/><span className="accent">PLAYER IDENTITY</span></>}</div>
+          <p className="section-sub">{currentUser ? 'Update your info' : 'Tell us about yourself to get matched with the right players'}</p>
+        </div>
+
+        <div className="flex-col gap-20">
+          {/* Name */}
+          <div className="card card-inner">
+            <div className="form-group">
+              <label className="form-label">Full Name</label>
+              <input className="form-input" value={form.name} onChange={e => setForm(f => ({...f, name: e.target.value}))} placeholder="e.g. Arjun Sharma" />
+            </div>
+          </div>
+
+          {/* Sport */}
+          <div className="card">
+            <div className="card-header"><span className="card-title">Primary Sport</span></div>
+            <div className="card-body">
+              <div className="chip-grid">
+                {SPORTS.map(s => (
+                  <button key={s.id} onClick={() => setForm(f => ({...f, sport: s.id}))}
+                    className={`chip ${form.sport === s.id ? 'active-green' : ''}`}>
+                    <span style={{ fontSize: 18 }}>{s.icon}</span> {s.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Skill */}
+          <div className="card">
+            <div className="card-header"><span className="card-title">Skill Level</span><span className="text-sm text-faint">Self-assessment</span></div>
+            <div className="card-body">
+              <div className="chip-row mb-12">
+                {SKILL_LEVELS.map(s => (
+                  <button key={s.id} onClick={() => setForm(f => ({...f, skill: s.id}))}
+                    className={`pill ${form.skill === s.id ? 'active-green' : ''}`}
+                    style={form.skill === s.id ? { borderColor: s.color, background: s.paleBg, color: s.color } : {}}>
+                    {s.label}
+                  </button>
+                ))}
+              </div>
+              {sl && (
+                <div style={{ background: 'var(--ink-5)', borderRadius: 'var(--radius-sm)', padding: '12px 14px' }}>
+                  <div className="flex items-center gap-12">
+                    <div className="rating-bar-wrap">
+                      <div className="rating-bar-fill" style={{ width: `${getRatingBar(sl.rating)}%`, background: `linear-gradient(90deg, ${sl.color}88, ${sl.color})` }} />
+                    </div>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: sl.color, fontFamily: 'Oswald, sans-serif', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>{sl.rating} ELO</span>
+                  </div>
+                  <p className="text-xs text-faint mt-4">{sl.label2}</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* City + Availability */}
+          <div className="grid-2">
+            <div className="card card-inner">
+              <div className="form-group">
+                <label className="form-label">City</label>
+                <select className="form-input" value={form.city} onChange={e => setForm(f => ({...f, city: e.target.value}))}>
+                  {CITIES.map(c => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </div>
+            </div>
+            <div className="card">
+              <div className="card-header"><span className="card-title">Availability</span></div>
+              <div className="card-body">
+                <div className="chip-row">
+                  {['mornings', 'evenings', 'weekends'].map(a => (
+                    <button key={a} onClick={() => toggleAvail(a)}
+                      className={`pill ${form.availability.includes(a) ? 'active-orange' : ''}`}>
+                      {a.charAt(0).toUpperCase() + a.slice(1)}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Bio */}
+          <div className="card card-inner">
+            <div className="form-group">
+              <label className="form-label">Short Bio</label>
+              <textarea className="form-input" rows={3} value={form.bio} onChange={e => setForm(f => ({...f, bio: e.target.value}))} placeholder="Tell other players about your playing style, experience, or what you're looking for..." />
+            </div>
+          </div>
+
+          <button className={`btn btn-lg btn-full ${form.name.trim() ? 'btn-primary' : ''}`} onClick={handleSave} disabled={!form.name.trim()}
+            style={{ fontFamily: 'Oswald, sans-serif', letterSpacing: '1.5px', textTransform: 'uppercase' }}>
+            {currentUser ? 'Save Changes' : '🎮 Create Profile & Join'}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // ── VIEW MODE ──
+  const tier = getTier(currentUser.rating);
+  const sport = SPORTS.find(s => s.id === currentUser.sport);
+  const wr = winRate(currentUser.wins, currentUser.played);
+
+  return (
+    <div className="page-sm fade-in">
+      {/* Hero profile card */}
+      <div style={{ background: 'linear-gradient(135deg, #0F1A0E 0%, #1E2E1D 100%)', borderRadius: 'var(--radius-lg)', padding: '36px 36px 28px', marginBottom: 24, position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', top: -30, right: -30, width: 200, height: 200, borderRadius: '50%', background: `${tier.color}15`, pointerEvents: 'none' }} />
+        <div className="flex items-start gap-20" style={{ flexWrap: 'wrap' }}>
+          <div style={{ position: 'relative' }}>
+            <Avatar initials={currentUser.avatar} size={80} rating={currentUser.rating} />
+            <div className="notif-dot" style={{ position: 'absolute', bottom: 4, right: 4, border: '2px solid #1E2E1D' }} />
+          </div>
+          <div style={{ flex: 1 }}>
+            <div className="flex items-center gap-8 wrap mb-8">
+              <h2 style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 36, letterSpacing: '1px', color: 'white', lineHeight: 1 }}>{currentUser.name}</h2>
+              <span className="badge" style={{ background: `${tier.color}22`, color: tier.color, border: `1px solid ${tier.color}44` }}>{tier.label}</span>
+              <span className="badge badge-ink" style={{ color: '#94A593', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)' }}>{sport?.icon} {sport?.label}</span>
+            </div>
+            <p style={{ color: '#94A593', fontSize: 13, marginBottom: currentUser.bio ? 8 : 0 }}>📍 {currentUser.city} · ⏰ {currentUser.availability.join(', ') || 'No availability set'}</p>
+            {currentUser.bio && <p style={{ color: '#d1d5d0', fontSize: 14, lineHeight: 1.55 }}>{currentUser.bio}</p>}
+          </div>
+          <button className="btn btn-outline" onClick={() => setEditing(true)} style={{ color: '#94A593', borderColor: 'rgba(255,255,255,0.15)', background: 'transparent' }}>Edit Profile</button>
+        </div>
+
+        {/* ELO bar */}
+        <div style={{ marginTop: 24, background: 'rgba(0,0,0,0.3)', borderRadius: 'var(--radius-sm)', padding: '14px 16px' }}>
+          <div className="flex justify-between mb-12" style={{ marginBottom: 6 }}>
+            <span style={{ fontFamily: 'Oswald, sans-serif', fontSize: 11, letterSpacing: '2px', color: '#94A593', textTransform: 'uppercase' }}>ELO Rating</span>
+            <span style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 20, color: tier.color, letterSpacing: '1px' }}>{currentUser.rating} pts</span>
+          </div>
+          <div style={{ height: 8, background: 'rgba(255,255,255,0.08)', borderRadius: 4, overflow: 'hidden' }}>
+            <div style={{ width: `${getRatingBar(currentUser.rating)}%`, height: '100%', background: `linear-gradient(90deg, ${tier.color}88, ${tier.color})`, borderRadius: 4, transition: 'width 0.6s' }} />
+          </div>
+          <div className="flex justify-between mt-4">
+            <span style={{ fontSize: 10, color: '#5A6B59', fontFamily: 'Oswald, sans-serif', letterSpacing: '0.5px' }}>Beginner 600</span>
+            <span style={{ fontSize: 10, color: '#5A6B59', fontFamily: 'Oswald, sans-serif', letterSpacing: '0.5px' }}>Pro 1800</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Stats */}
+      <div className="stat-grid mb-20">
+        {[
+          { label: 'Played', value: currentUser.played, color: 'var(--ink)' },
+          { label: 'Wins', value: currentUser.wins, color: 'var(--turf)' },
+          { label: 'Losses', value: currentUser.losses, color: '#ef4444' },
+          { label: 'Win Rate', value: `${wr}%`, color: 'var(--gold)' },
+        ].map(s => (
+          <div key={s.label} className="stat-box">
+            <div className="stat-val" style={{ color: s.color }}>{s.value}</div>
+            <div className="stat-label">{s.label}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Match history */}
+      <div className="card">
+        <div className="card-header mb-16"><span className="card-title">Recent Match History</span></div>
+        <div className="card-body" style={{ paddingTop: 0 }}>
+          {currentUser.played === 0 ? (
+            <div style={{ textAlign: 'center', padding: '28px 0', color: 'var(--ink-30)' }}>
+              <div style={{ fontSize: 36, marginBottom: 8 }}>🏅</div>
+              <p style={{ fontFamily: 'Oswald, sans-serif', letterSpacing: '1px', fontSize: 15 }}>NO MATCHES YET</p>
+              <p className="text-sm text-faint mt-4">Find players and get on the field!</p>
+            </div>
+          ) : (
+            <div className="flex-col gap-8">
+              {['win', 'loss', 'win', 'win'].slice(0, Math.min(4, currentUser.played)).map((outcome, i) => {
+                const opp = SAMPLE_PLAYERS[(i + 2) % SAMPLE_PLAYERS.length];
+                const change = eloChange(outcome);
+                return (
+                  <div key={i} className="match-row">
+                    <div className="match-dot" style={{ background: outcome === 'win' ? 'var(--turf)' : '#ef4444' }} />
+                    <span className="flex-1 text-sm" style={{ color: 'var(--ink)' }}>vs {opp.name}</span>
+                    <span className="badge" style={outcome === 'win' ? { background: 'var(--turf-pale)', color: 'var(--turf)', borderColor: 'rgba(45,106,79,0.2)' } : { background: '#fee2e2', color: '#dc2626', borderColor: 'rgba(239,68,68,0.2)' }}>{outcome.toUpperCase()}</span>
+                    <span style={{ fontFamily: 'Oswald, sans-serif', fontSize: 14, fontWeight: 600, color: change > 0 ? 'var(--turf)' : '#ef4444', minWidth: 38, textAlign: 'right' }}>{change > 0 ? '+' : ''}{change}</span>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── RATING PAGE ─────────────────────────────────────────────────── */
+function RatingPage({ currentUser, setCurrentUser }) {
+  const [selected, setSelected] = useState(null);
+  const [feedback, setFeedback] = useState('');
+  const [log, setLog] = useState([]);
+  const tier = currentUser ? getTier(currentUser.rating) : null;
+
+  const simulateMatch = (outcome) => {
+    if (!currentUser) return;
+    const change = eloChange(outcome);
+    const newRating = Math.max(400, currentUser.rating + change);
+    const updated = {
+      ...currentUser, rating: newRating,
+      wins: outcome === 'win' ? currentUser.wins + 1 : currentUser.wins,
+      losses: outcome === 'loss' ? currentUser.losses + 1 : currentUser.losses,
+      played: currentUser.played + 1
+    };
+    setCurrentUser(updated);
+    const opp = SAMPLE_PLAYERS[Math.floor(Math.random() * SAMPLE_PLAYERS.length)];
+    setLog(l => [{ outcome, change, opp: opp.name, newRating }, ...l.slice(0, 7)]);
+    setSelected(null); setFeedback('');
+  };
+
+  return (
+    <div className="page-sm fade-in">
+      <div className="section-header">
+        <div className="section-title">PLAYER <span className="accent">LEVEL SYSTEM</span></div>
+        <p className="section-sub">Dynamic ELO-based ratings that evolve with every match you play</p>
+      </div>
+
+      {/* Current tier hero */}
+      {currentUser && tier && (
+        <div style={{ background: tier.pale, border: `2px solid ${tier.color}33`, borderRadius: 'var(--radius-lg)', padding: '20px 24px', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 16 }}>
+          <div style={{ width: 54, height: 54, borderRadius: '50%', background: tier.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, flexShrink: 0, boxShadow: `0 4px 14px ${tier.color}44` }}>
+            {tier.label === 'Beginner' ? '🌱' : tier.label === 'Amateur' ? '🎯' : tier.label === 'Intermediate' ? '⚡' : tier.label === 'Advanced' ? '🔥' : '👑'}
+          </div>
+          <div>
+            <p style={{ fontFamily: 'Oswald, sans-serif', fontSize: 11, letterSpacing: '2px', textTransform: 'uppercase', color: tier.color, marginBottom: 3 }}>Your Current Tier</p>
+            <p style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 28, letterSpacing: '1px', color: tier.color, lineHeight: 1 }}>{tier.label.toUpperCase()} — {currentUser.rating} ELO</p>
+          </div>
+        </div>
+      )}
+
+      {/* Tier ladder */}
+      <div className="card mb-24">
+        <div className="card-header"><span className="card-title">Rating Tiers</span></div>
+        <div className="card-body">
+          <div className="flex-col gap-8">
+            {SKILL_LEVELS.slice().reverse().map(s => {
+              const isActive = currentUser && getTier(currentUser.rating).label.toLowerCase() === (s.id === 'professional' ? 'pro' : s.id);
+              return (
+                <div key={s.id} className={`tier-row ${isActive ? 'active-tier' : ''}`} style={isActive ? { borderColor: s.color, background: s.paleBg } : {}}>
+                  <div style={{ width: 12, height: 12, borderRadius: '50%', background: s.color, flexShrink: 0 }} />
+                  <span style={{ fontFamily: 'Oswald, sans-serif', fontSize: 15, fontWeight: 600, color: isActive ? s.color : 'var(--ink)', minWidth: 110, letterSpacing: '0.5px' }}>
+                    {s.label.toUpperCase()}
+                  </span>
+                  <div className="rating-bar-wrap">
+                    <div className="rating-bar-fill" style={{ width: `${getRatingBar(s.rating)}%`, background: `linear-gradient(90deg, ${s.color}55, ${s.color})` }} />
+                  </div>
+                  <span style={{ fontSize: 13, color: 'var(--ink-50)', fontFamily: 'Oswald, sans-serif', minWidth: 44, textAlign: 'right' }}>{s.rating}+</span>
+                  {isActive && <span className="badge pulse-green" style={{ background: s.paleBg, color: s.color, borderColor: `${s.color}44`, marginLeft: 4 }}>YOU</span>}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* ELO explainer */}
+      <div className="card mb-24">
+        <div className="card-header"><span className="card-title">How ELO Works</span></div>
+        <div className="card-body">
+          <div className="grid-3">
+            {[
+              { icon: '🏆', label: 'Win', change: '+16', color: 'var(--turf)', pale: 'var(--turf-pale)' },
+              { icon: '🤝', label: 'Draw', change: '±0', color: 'var(--ink-30)', pale: 'var(--ink-5)' },
+              { icon: '❌', label: 'Loss', change: '−16', color: '#ef4444', pale: '#fee2e2' },
+            ].map(item => (
+              <div key={item.label} style={{ background: item.pale, borderRadius: 'var(--radius-sm)', padding: 16, textAlign: 'center', border: `1px solid ${item.color}22` }}>
+                <div style={{ fontSize: 28, marginBottom: 6 }}>{item.icon}</div>
+                <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 20, color: item.color, letterSpacing: '1px' }}>{item.label}</div>
+                <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 16, fontWeight: 600, color: item.color, marginTop: 2 }}>{item.change}</div>
+                <div className="text-xs text-faint mt-4">rating points</div>
+              </div>
+            ))}
+          </div>
+          <p style={{ fontSize: 12, color: 'var(--ink-30)', marginTop: 12, lineHeight: 1.6 }}>
+            K-factor = 32. Beating stronger opponents gives more points. Peer feedback is optional but helps community trust.
+          </p>
+        </div>
+      </div>
+
+      {/* Match simulator */}
+      <div className="card mb-24">
+        <div className="card-header"><span className="card-title">Simulate Match Result</span></div>
+        <div className="card-body">
+          {!currentUser ? (
+            <div style={{ textAlign: 'center', padding: '24px 0', color: 'var(--ink-30)' }}>
+              <p style={{ fontFamily: 'Oswald, sans-serif', fontSize: 14, letterSpacing: '1px' }}>CREATE YOUR PROFILE FIRST</p>
+            </div>
+          ) : (
+            <>
+              <div className="flex gap-8 mb-16">
+                {['win', 'draw', 'loss'].map(o => {
+                  const colors = { win: { active: 'var(--turf)', border: 'var(--turf)', pale: 'var(--turf-pale)' }, draw: { active: 'var(--ink-50)', border: 'var(--ink-30)', pale: 'var(--ink-5)' }, loss: { active: '#ef4444', border: '#ef4444', pale: '#fee2e2' } };
+                  const c = colors[o];
+                  const change = eloChange(o);
+                  return (
+                    <button key={o} onClick={() => setSelected(o)} className="outcome-btn"
+                      style={{
+                        background: selected === o ? c.pale : 'var(--white)',
+                        borderColor: selected === o ? c.active : c.border,
+                        color: c.active,
+                      }}>
+                      <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 22, letterSpacing: '2px' }}>{o.toUpperCase()}</div>
+                      <div style={{ fontSize: 12, fontFamily: 'Oswald, sans-serif', fontWeight: 500, letterSpacing: '0.5px', opacity: 0.75 }}>{change > 0 ? '+' : ''}{change} pts</div>
+                    </button>
+                  );
+                })}
+              </div>
+              {selected && (
+                <div className="fade-in">
+                  <textarea className="form-input mb-12" value={feedback} onChange={e => setFeedback(e.target.value)}
+                    placeholder="Optional peer feedback (sportsmanship, skill notes...)" rows={2} />
+                  <button className="btn btn-primary btn-full btn-lg" onClick={() => simulateMatch(selected)}
+                    style={{ fontFamily: 'Oswald, sans-serif', letterSpacing: '2px', textTransform: 'uppercase' }}>
+                    Record Result & Update Rating →
+                  </button>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* History log */}
+      {log.length > 0 && (
+        <div className="card fade-in">
+          <div className="card-header"><span className="card-title">Rating History</span></div>
+          <div className="card-body">
+            <div className="flex-col gap-8">
+              {log.map((entry, i) => (
+                <div key={i} className="match-row">
+                  <div className="match-dot" style={{ background: entry.outcome === 'win' ? 'var(--turf)' : entry.outcome === 'draw' ? 'var(--ink-30)' : '#ef4444' }} />
+                  <span className="flex-1 text-sm">vs {entry.opp}</span>
+                  <span className="badge" style={entry.outcome === 'win' ? { background: 'var(--turf-pale)', color: 'var(--turf)' } : entry.outcome === 'draw' ? { background: 'var(--ink-5)', color: 'var(--ink-50)' } : { background: '#fee2e2', color: '#dc2626' }}>{entry.outcome.toUpperCase()}</span>
+                  <span style={{ fontFamily: 'Oswald, sans-serif', fontSize: 14, fontWeight: 600, color: entry.change > 0 ? 'var(--turf)' : entry.change === 0 ? 'var(--ink-30)' : '#ef4444', minWidth: 38, textAlign: 'right' }}>{entry.change > 0 ? '+' : ''}{entry.change}</span>
+                  <span style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 16, color: 'var(--ink-30)', letterSpacing: '0.5px', minWidth: 36 }}>→ {entry.newRating}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─── MATCH PAGE ─────────────────────────────────────────────────── */
+function MatchPage({ currentUser }) {
+  const [filters, setFilters] = useState({ sport: 'all', skill: 'all', city: 'all', availability: 'all' });
+  const [search, setSearch] = useState('');
+  const [sent, setSent] = useState([]);
+  const [view, setView] = useState('grid');
+
+  const allPlayers = SAMPLE_PLAYERS.filter(p => !currentUser || p.id !== currentUser?.id);
+
+  const filtered = allPlayers.filter(p => {
+    if (filters.sport !== 'all' && p.sport !== filters.sport) return false;
+    if (filters.skill !== 'all' && p.skill !== filters.skill) return false;
+    if (filters.city !== 'all' && p.city !== filters.city) return false;
+    if (filters.availability !== 'all' && !p.availability.includes(filters.availability)) return false;
+    if (search && !p.name.toLowerCase().includes(search.toLowerCase())) return false;
+    return true;
+  }).sort((a, b) => {
+    if (!currentUser) return 0;
+    return Math.abs(a.rating - currentUser.rating) - Math.abs(b.rating - currentUser.rating);
+  });
+
+  return (
+    <div className="page fade-in">
+      {/* Hero */}
+      <div className="hero mb-32">
+        <div className="hero-eyebrow">Player Discovery</div>
+        <div className="hero-title">FIND YOUR<br/><span>NEXT OPPONENT</span></div>
+        <div className="hero-sub">
+          {currentUser
+            ? `Showing ${filtered.length} players sorted by rating proximity to yours (${currentUser.rating} ELO)`
+            : 'Browse all registered players. Create a profile for personalized smart matching.'}
+        </div>
+      </div>
+
+      {/* Filter bar */}
+      <div className="filter-bar mb-24">
+        <input className="form-input" value={search} onChange={e => setSearch(e.target.value)}
+          placeholder="🔍  Search by name..." style={{ minWidth: 180, maxWidth: 220 }} />
+        {[
+          { key: 'sport', opts: [{ v: 'all', l: 'All Sports' }, ...SPORTS.map(s => ({ v: s.id, l: `${s.icon} ${s.label}` }))] },
+          { key: 'skill', opts: [{ v: 'all', l: 'All Levels' }, ...SKILL_LEVELS.map(s => ({ v: s.id, l: s.label }))] },
+          { key: 'city', opts: [{ v: 'all', l: 'All Cities' }, ...CITIES.map(c => ({ v: c, l: c }))] },
+          { key: 'availability', opts: [{ v: 'all', l: 'Any Time' }, { v: 'mornings', l: '☀️ Mornings' }, { v: 'evenings', l: '🌆 Evenings' }, { v: 'weekends', l: '📅 Weekends' }] },
+        ].map(f => (
+          <select key={f.key} className="form-input" style={{ maxWidth: 150 }} value={filters[f.key]} onChange={e => setFilters(p => ({ ...p, [f.key]: e.target.value }))}>
+            {f.opts.map(o => <option key={o.v} value={o.v}>{o.l}</option>)}
+          </select>
+        ))}
+        <span className="filter-count">{filtered.length} players</span>
+      </div>
+
+      {/* Grid */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(296px, 1fr))', gap: 20 }}>
+        {filtered.map(player => {
+          const tier = getTier(player.rating);
+          const sport = SPORTS.find(s => s.id === player.sport);
+          const wr = winRate(player.wins, player.played);
+          const ratingDiff = currentUser ? player.rating - currentUser.rating : null;
+          const isBest = ratingDiff !== null && Math.abs(ratingDiff) <= 200;
+          const hasSent = sent.includes(player.id);
+
+          return (
+            <div key={player.id} className={`player-card ${isBest && currentUser ? 'best-match' : ''}`}>
+              {/* Color accent top */}
+              <div style={{ height: 4, background: `linear-gradient(90deg, ${tier.color}, ${tier.color}44)` }} />
+
+              <div className="player-card-body">
+                {isBest && currentUser && (
+                  <div style={{ position: 'absolute', top: 16, right: 16 }}>
+                    <span className="badge badge-green" style={{ fontSize: 10 }}>⚡ Great Match</span>
+                  </div>
+                )}
+
+                {/* Header */}
+                <div className="flex items-center gap-12 mb-16">
+                  <Avatar initials={player.avatar} size={50} rating={player.rating} />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 19, fontWeight: 600, color: 'var(--ink)', letterSpacing: '0.5px', lineHeight: 1.1 }}>{player.name}</div>
+                    <div className="text-xs text-muted mt-4">📍 {player.city} · {sport?.icon} {sport?.label}</div>
+                  </div>
+                </div>
+
+                {/* Badges */}
+                <div className="flex gap-6 wrap mb-12">
+                  <span className="badge" style={{ background: tier.pale, color: tier.color, borderColor: `${tier.color}33` }}>{tier.label}</span>
+                  <span className="badge badge-ink">{player.rating} ELO</span>
+                  {ratingDiff !== null && (
+                    <span className="badge" style={Math.abs(ratingDiff) <= 100 ? { background: 'var(--turf-pale)', color: 'var(--turf)' } : ratingDiff > 0 ? { background: '#fee2e2', color: '#dc2626' } : { background: 'var(--track-pale)', color: 'var(--track)' }}>
+                      {ratingDiff > 0 ? '▲' : ratingDiff < 0 ? '▼' : '='} {Math.abs(ratingDiff)}
+                    </span>
+                  )}
+                </div>
+
+                {/* Bio */}
+                {player.bio && <p className="text-sm mb-12" style={{ color: 'var(--ink-50)', lineHeight: 1.5 }}>{player.bio}</p>}
+
+                {/* Mini stats */}
+                <div className="flex gap-8 mb-12">
+                  {[{ l: 'W', v: player.wins, c: 'var(--turf)' }, { l: 'L', v: player.losses, c: '#ef4444' }, { l: 'WR', v: `${wr}%`, c: 'var(--gold)' }].map(s => (
+                    <div key={s.l} style={{ flex: 1, background: 'var(--ink-5)', borderRadius: 6, padding: '8px 4px', textAlign: 'center' }}>
+                      <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 20, color: s.c, letterSpacing: '0.5px' }}>{s.v}</div>
+                      <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 9, letterSpacing: '1px', color: 'var(--ink-30)', textTransform: 'uppercase', marginTop: 1 }}>{s.l}</div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Availability */}
+                <div className="flex gap-6 wrap mb-16">
+                  {player.availability.map(a => (
+                    <span key={a} className="badge badge-orange" style={{ fontSize: 10 }}>{a}</span>
+                  ))}
+                </div>
+
+                {/* CTA */}
+                <button onClick={() => !hasSent && setSent(s => [...s, player.id])}
+                  className={`btn btn-full ${hasSent ? 'btn-outline' : 'btn-orange'}`}
+                  style={{ fontFamily: 'Oswald, sans-serif', letterSpacing: '1.5px', textTransform: 'uppercase', fontSize: 13 }}>
+                  {hasSent ? '✓ Request Sent' : 'Send Match Request'}
+                </button>
+              </div>
+            </div>
+          );
+        })}
+        {filtered.length === 0 && (
+          <div className="empty">
+            <div className="empty-icon">🔍</div>
+            <div className="empty-title">No Players Found</div>
+            <div className="empty-sub">Try adjusting your filters or search term</div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ─── LANDING (no profile) ────────────────────────────────────────── */
+function LandingBanner({ setPage }) {
+  return (
+    <div style={{ background: 'linear-gradient(135deg, #2D6A4F, #52B788)', borderRadius: 'var(--radius-lg)', padding: '32px 36px', margin: '0 0 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
+      <div>
+        <p style={{ fontFamily: 'Oswald, sans-serif', fontSize: 11, letterSpacing: '3px', color: 'rgba(255,255,255,0.65)', marginBottom: 6, textTransform: 'uppercase' }}>Welcome to SportsConnect</p>
+        <p style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 32, color: 'white', letterSpacing: '1px', lineHeight: 1 }}>FIND YOUR GAME. GROW YOUR GAME.</p>
+        <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: 14, marginTop: 6 }}>Create a free profile to get matched with players at your skill level.</p>
+      </div>
+      <button className="btn btn-lg" onClick={() => setPage('profile')} style={{ background: 'white', color: 'var(--turf)', fontFamily: 'Oswald, sans-serif', letterSpacing: '1.5px', textTransform: 'uppercase', flexShrink: 0, boxShadow: '0 4px 16px rgba(0,0,0,0.15)' }}>
+        Create Profile →
+      </button>
+    </div>
+  );
+}
+
+/* ─── APP ─────────────────────────────────────────────────────────── */
+function App() {
+  const [page, setPage] = useState('profile');
+  const [currentUser, setCurrentUser] = useState(null);
+
+  return (
+    <div style={{ minHeight: '100vh', background: 'var(--chalk)' }}>
+      <NavBar page={page} setPage={setPage} currentUser={currentUser} />
+      {page === 'match' && !currentUser && (
+        <div className="page" style={{ paddingBottom: 0 }}>
+          <LandingBanner setPage={setPage} />
+        </div>
+      )}
+      {page === 'profile' && <ProfilePage currentUser={currentUser} setCurrentUser={setCurrentUser} />}
+      {page === 'rating' && <RatingPage currentUser={currentUser} setCurrentUser={setCurrentUser} />}
+      {page === 'match' && <MatchPage currentUser={currentUser} />}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
